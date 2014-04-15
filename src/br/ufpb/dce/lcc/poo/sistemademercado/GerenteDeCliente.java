@@ -10,14 +10,13 @@ public class GerenteDeCliente {
 		this.clientes = new LinkedList<Cliente>();
 	}
 
-	public void cadastra(String nome, String cpf, String endereco) {
+	public void cadastra(Cliente cli) {
 		for (Cliente c: this.clientes) {
-			if (c.getCpf().equals(cpf)) {
-				throw new ExcecaoSistemaDeCliente ("Cliente já existe!");
+			if (c.getCpf().equals(cli.getCpf())) {
+				throw new ExcecaoSistemaDeMercado ("Cliente já existe!");
 			}
 		}
-		Cliente cliente = new Cliente (nome, cpf, endereco);
-		this.clientes.add(cliente);
+		this.clientes.add(cli);
 	}
 
 	public Cliente pesquisaPorNome(String nome) {
@@ -26,7 +25,7 @@ public class GerenteDeCliente {
 				return c;
 			}
 		}
-		throw new ExcecaoSistemaDeCliente("Cliente Inexistente");
+		throw new ExcecaoSistemaDeMercado("Cliente Inexistente");
 	}
 
 	public Cliente pesquisaPorCpf(String cpf) {
@@ -35,7 +34,7 @@ public class GerenteDeCliente {
 				return c;
 			}
 		}
-		throw new ExcecaoSistemaDeCliente("Cliente Inexistente");
+		throw new ExcecaoSistemaDeMercado("Cliente Inexistente");
 	}
 
 	public void removerClientePorCpf(String cpf) {
@@ -48,26 +47,9 @@ public class GerenteDeCliente {
 			}
 		}
 		if(!remove){
-			throw new ExcecaoSistemaDeCliente("Cliente Inexistente");
+			throw new ExcecaoSistemaDeMercado("Cliente Inexistente");
 		}
-		
 	}
-
-	public Cliente exibir(String nome) {
-		return (Cliente) this.clientes;
-	}
-
-	public List<Cliente> buscarClientes() {
-		if(clientes.size() > 0){
-			return this.clientes;
-		}
-		else{
-			return null;
-		}
-		
-	}
-
-	
 }
 
 

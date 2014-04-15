@@ -10,9 +10,12 @@ public class GerenteDeProduto {
 		this.produtos = new LinkedList <Produto>();
 	}
 
-	public void cadastra(String nome, int codigo, double preco){
-		Produto p = new Produto(nome, codigo, preco);
-		produtos.add(p);
+	public void cadastra(Produto produto){
+		for (Produto p: this.produtos) {
+			if (p.getCodigo() == produto.getCodigo()) 
+				throw new ExcecaoSistemaDeMercado("O Produto já existe!");
+		}
+		produtos.add(produto);
 		
 	}
 
@@ -23,10 +26,10 @@ public class GerenteDeProduto {
 			}
 		}
 		
-		return null;
+		throw new ExcecaoSistemaDeMercado ("Produto não existe!");
 	}
 
-	public void removePorCodigo(int codigo){
+	public void remove(int codigo){
 		boolean remove = false;
 		for(Produto p: this.produtos){
 			if(p.getCodigo() == codigo){
@@ -36,7 +39,7 @@ public class GerenteDeProduto {
 			}
 		}
 		if(!remove){
-			throw new ExcecaoSistemaDeProduto("Produto não encontrado");
+			throw new ExcecaoSistemaDeMercado("Produto não existe!s");
 		}
 	}
 
@@ -47,36 +50,17 @@ public class GerenteDeProduto {
 			}
 		}
 		
-		throw new ExcecaoSistemaDeProduto("O produto não encontrado");
+		throw new ExcecaoSistemaDeMercado("O produto não encontrado");
 	}
 
-	public void alteraPreco(int i, double d) {
-		  Produto p = this.pesquisaPorCodigo(i);
-		  p.setPreco(d);
-		  
-		 }
-
-	public String pesquisaDescricaoDePrecoDeProduto(int i) {
-		  Produto p = this.pesquisaPorCodigo(i);
-		  return p.mostrarPreco();
-		 }
-
-	public List <Produto> buscarProdutos() {
-		if(produtos.size()> 0){
-			return this.produtos;
-		}
-		else{
-			return null;
-		}
-	}
-
-	public boolean verificaSeHaProduto(int codigo) {
-		for(Produto p: this.produtos){
-			if(p.getCodigo() == codigo){
-				return true;
+	public void altera (Produto novo) {
+		for (Produto p : this.produtos){
+			if (p.getCodigo() == novo.getCodigo()) {
+				p.setNome(novo.getNome());
+				p.setPreco(novo.getPreco());
 			}
 		}
-		return false;
+		
 	}
 }
 

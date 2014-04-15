@@ -1,7 +1,5 @@
 package br.ufpb.dce.lcc.poo.sistemademercado;
 
-import java.util.List;
-
 public class SistemaDeMercado {
 	GerenteDeFuncionario funcionarios;
 	GerenteDeProduto produtos;
@@ -21,8 +19,8 @@ public class SistemaDeMercado {
 		
 	}
 	        
-	public void cadastraFuncionario (String n, String cpf, String funcao) {
-		funcionarios.cadastra (n, cpf, funcao);
+	public void cadastraFuncionario (Funcionario f) {
+		funcionarios.cadastra (f);
 	}
 	public void removeFuncionarioPorCPF (String cpf) {
 	    funcionarios.removePorCPF(cpf);	
@@ -38,8 +36,8 @@ public class SistemaDeMercado {
 		return false;
 	}
 
-	public void cadastraProduto(String nome, int codigo, double preco) {
-		produtos.cadastra(nome, codigo, preco);
+	public void cadastraProduto(Produto p) {
+		produtos.cadastra(p);
 		
 	}
 
@@ -49,7 +47,7 @@ public class SistemaDeMercado {
 	}
 
 	public void removeProdutoPorCodigo(int cod) {
-		produtos.removePorCodigo(cod);
+		produtos.remove(cod);
 		
 	}
 
@@ -59,8 +57,8 @@ public class SistemaDeMercado {
 	}
 
 
-	public void cadastraFornecedor(String nome, String cidade, int telefone, String cnpj) {
-		this.fornecedores.cadastra(nome, cidade,telefone, cnpj);
+	public void cadastraFornecedor(Fornecedor fornecedor) {
+		this.fornecedores.cadastra(fornecedor);
 	}
 
 	public Fornecedor pesquisaFornecedorPeloNome(String nome) {
@@ -75,8 +73,8 @@ public class SistemaDeMercado {
 		fornecedores.removeFornecedorPorCnpj(cnpj);
 	}
 
-	public void cadastroDeCliente(String nome, String cpf, String endereco) {
-		clientes.cadastra(nome, cpf, endereco);
+	public void cadastroDeCliente(Cliente cli) {
+		clientes.cadastra(cli);
 		
 	}
 
@@ -101,32 +99,10 @@ public class SistemaDeMercado {
         return this.caixas.pesquisaDiaria (data);
 	}
 
-	public void alterarPrecoDeProduto(int i, double d) {
-		  this.produtos.alteraPreco (i, d);
+	public void alterarProduto(Produto novo) {
+		  this.produtos.altera (novo);
 	}
-	public String pesquisaPrecoDeProduto(int i) {
-		  return this.produtos.pesquisaDescricaoDePrecoDeProduto(i);
-	}
-
-	public List <Produto> exibirProdutos() {
-		return produtos.buscarProdutos();
-	}
-	public List <Cliente> exibirClientes() {
-		return clientes.buscarClientes();
-	}
-
-	public List <Funcionario> exibirFuncionarios() {
-		return funcionarios.buscaFuncionarios();
-	}
-
-	public List <Fornecedor> exibirFornecedores() {
-		return fornecedores.buscarFornecedores();
-	}
-	public List <ItemDePedido> exibirItemDePedido() {
-		return pedidos.buscarItemDePedido();
-	}
-
-
+	
 	public Fornecedor pesquisaFornecedorPassandoCnpj(String cnpj) {
 		return this.fornecedores.pesquisaPorCnpj(cnpj);
 	}

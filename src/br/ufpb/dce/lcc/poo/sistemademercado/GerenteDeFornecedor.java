@@ -10,14 +10,13 @@ public class GerenteDeFornecedor {
 		this.fornecedores = new LinkedList<Fornecedor>();
 	}
 
-	public void cadastra(String nome, String cidade, int telefone, String cnpj) {
+	public void cadastra(Fornecedor fornecedor) {
 		for (Fornecedor f: this.fornecedores) {
-			if (f.getCnpj().equals(cnpj)) {
-				throw new ExcecaoSistemaDeFornecedor ("Fornecedor já existe!");
+			if (f.getCnpj().equals(fornecedor.getCnpj())) {
+				throw new ExcecaoSistemaDeMercado ("Fornecedor já existe!");
 			}
 		}
-		Fornecedor f = new Fornecedor(nome, cidade, telefone, cnpj);
-		fornecedores.add(f);
+		fornecedores.add(fornecedor);
 		
 	}
 
@@ -27,7 +26,7 @@ public class GerenteDeFornecedor {
 				return f;
 			}
 		}
-		return null;
+		throw new ExcecaoSistemaDeMercado ("Fornecedor nao existe!");
 	}
 	public Fornecedor pesquisaPorCnpj (String cnpj) {
 		for(Fornecedor f: this.fornecedores){
@@ -35,7 +34,8 @@ public class GerenteDeFornecedor {
 				return f;
 			}
 		}
-		return null;
+		throw new ExcecaoSistemaDeMercado ("Fornecedor nao existe!");
+
 	}
 
 	public void removeFornecedorPorCnpj (String cnpj) {
@@ -47,18 +47,8 @@ public class GerenteDeFornecedor {
 				break;
 			}
 		}if(!remove){
-			throw new ExcecaoSistemaDeFornecedor("Fornevedor não encontrado");
+			throw new ExcecaoSistemaDeMercado("Fornevedor não encontrado");
 		}
 		
 	}
-
-	public List<Fornecedor> buscarFornecedores() {
-		if(fornecedores.size() > 0){
-			return this.fornecedores;
-		}
-		else{
-			return null;
-		}
-	}
-
 }

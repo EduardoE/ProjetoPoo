@@ -13,222 +13,259 @@ public class SistemaDeMercadoTest {
 		sistema = new SistemaDeMercado ();
 		assertFalse ("O sistema iniciou acabado", sistema.finalizou());
 	}
+	
 	@Test                                                                      // TESTES FUNCIONARIO
 	public void cadastrarFuncionarioNoSistema () {
-		sistema.cadastraFuncionario("edu","12345","Caixa");
-		assertNotNull(sistema.pesquisaFuncionarioPorNome("edu"));
+		Funcionario f = new Funcionario("edu","12345","Caixa");
+		sistema.cadastraFuncionario(f);
+		Funcionario salvo = sistema.pesquisaFuncionarioPorNome("edu");
+		assertEquals(f, salvo);
 	}
+	
 	@Test                                                                      
 	public void cadastrarMaisDeUmFuncionarioNoSistema () {
 		this.cadastrarFuncionarioNoSistema();
-		sistema.cadastraFuncionario("fabio","123","Deposito");
-		assertNotNull(sistema.pesquisaFuncionarioPorNome("fabio"));
+		Funcionario f2 =  new Funcionario("fabio","123","Vendedor");
+		sistema.cadastraFuncionario (f2);
+		Funcionario salvo = sistema.pesquisaFuncionarioPorCPF(f2.getCpf());
+		assertEquals (f2, salvo);
 	}
-	@Test
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void removerFuncionarioDoSistemaPorCPF () {
-		sistema.cadastraFuncionario("edu","123","Caixa");
-		sistema.removeFuncionarioPorCPF("123");
-		assertNull (sistema.pesquisaFuncionarioPorCPF("12345"));
+		this.cadastrarFuncionarioNoSistema();   
+		sistema.removeFuncionarioPorCPF("12345");
+		sistema.pesquisaFuncionarioPorCPF("12345");
 	}
+	
 	@Test
 	public void pesquisarFuncionarioNoSistemaPeloNome () {
-		this.cadastrarFuncionarioNoSistema();
-		assertNotNull(sistema.pesquisaFuncionarioPorNome("edu"));
+		Funcionario f = new Funcionario ("João", "112233", "Gerente");
+		sistema.cadastraFuncionario(f);
+		Funcionario salvo = sistema.pesquisaFuncionarioPorNome("João");
+		assertEquals (f, salvo);
 	}
+	
 	@Test
 	public void pesquisarFuncionarioNoSistemaPeloCPF () {
-		this.cadastrarFuncionarioNoSistema(); 
-		assertNotNull(sistema.pesquisaFuncionarioPorCPF("12345"));
+		Funcionario f = new Funcionario ("João", "112233", "Gerente");
+		sistema.cadastraFuncionario(f);
+		Funcionario salvo = sistema.pesquisaFuncionarioPorCPF("112233");
+		assertEquals (f, salvo);
 	}
+	
 	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void cadastrarMesmoFuncionarioNoSistema () {
-		sistema.cadastraFuncionario("edu","12345", "Caixa");
-		sistema.cadastraFuncionario("edu","12345", "Caixa");
+		this.cadastrarFuncionarioNoSistema();
+		this.cadastrarFuncionarioNoSistema();
 	}
+	
 	@Test (expected = ExcecaoSistemaDeMercado.class)
-	public void removerFuncionarioPorCPFQueNaoEstaNoSistema () {
+	public void removerFuncionarioQueNaoEstaNoSistema () {
 		sistema.removeFuncionarioPorCPF("32344");
 	}
-	@Test
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void pesquisarFuncionarioPorCPFQueNaoEstaNoSistema(){
-		assertNull(sistema.pesquisaFuncionarioPorCPF("1010"));
+		sistema.pesquisaFuncionarioPorCPF("101010");
 	}
-	@Test
-	public void pesquisarFuncionarioPornomeQueNaoEstaNoSistema(){
-		assertNull(sistema.pesquisaFuncionarioPorNome("edu"));
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
+	public void pesquisarFuncionarioPorNomeQueNaoEstaNoSistema(){
+		sistema.pesquisaFuncionarioPorNome("edu");
 	}
+	
 	@Test                                                                             //TESTES PRODUTO
 	public void cadastrarProduto(){
-		sistema.cadastraProduto("leite", 1234, 8.00);
-		assertNotNull(sistema.pesquisaProdutoPorNome("leite"));
+		Produto p = new Produto ("leite", 1234, 8.00);
+		sistema.cadastraProduto(p);
+		Produto salvo = sistema.pesquisaProdutoPorCodigo(1234);
+		assertEquals (p, salvo);
 	}
+	
 	@Test                                                                             
 	public void cadastrarMaisDeUmProduto(){
-		this.cadastrarCliente();
-		sistema.cadastraProduto("biscoito", 5555, 3.50);
-		assertNotNull(sistema.pesquisaProdutoPorNome("biscoito"));
-	}
-	@Test
-	 public void alterarPrecoDeProduto () {
-	  this.cadastrarProduto();
-	  sistema.alterarPrecoDeProduto (1234, 10.0);
-	     assertEquals ("Preco = 10.0", sistema.pesquisaPrecoDeProduto(1234));
-	 }
-	@Test
-	public void pesquisarProdutoNome(){
 		this.cadastrarProduto();
-		assertNotNull(sistema.pesquisaProdutoPorNome("leite"));
+		Produto p2 = new Produto ("biscoito", 5555, 3.50);
+		sistema.cadastraProduto(p2);
+		Produto salvo2 = sistema.pesquisaProdutoPorCodigo(5555);
+		assertEquals (p2, salvo2);
 	}
-	@Test 
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
+	public void cadastrarMesmoProduto () {
+		this.cadastrarProduto();
+		this.cadastrarProduto();
+	} 
+	
+	@Test
+	public void alterarPrecoDeProduto () {
+		this.cadastrarProduto();
+		Produto p = new Produto ("leite",1234,3.40);
+		sistema.alterarProduto(p);
+		Produto salvo = sistema.pesquisaProdutoPorCodigo(1234);
+		assertEquals(p, salvo);
+	}
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void pesquisarProdutoInexistentePassandoNome () {
-		assertNull(sistema.pesquisaProdutoPorNome("feijão"));
+		sistema.pesquisaProdutoPorNome("feijão");
 	}
-	@Test (expected = ExcecaoSistemaDeProduto.class)
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void removerProdutoPassandoCodigo(){
 		this.cadastrarProduto();
 		sistema.removeProdutoPorCodigo(1234);
 		sistema.pesquisaProdutoPorCodigo(1234);
 	}
-	@Test (expected = ExcecaoSistemaDeProduto.class)
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void removerProdutoPorInexistentePassandoCodigo () {
-		sistema.removeProdutoPorCodigo(10);
+		sistema.removeProdutoPorCodigo(10454);
 	} 
+	
 	@Test
 	public void pesquisarProdutoPorCodigo(){
-		this.cadastrarProduto();
-		assertNotNull(sistema.pesquisaProdutoPorCodigo(1234));
+		Produto p = new Produto ("Açúcar", 4321, 1.00);
+		sistema.cadastraProduto(p);
+		Produto salvo = sistema.pesquisaProdutoPorCodigo(4321);
+		assertEquals (p, salvo);
 	}
+	
 	@Test                                                                                  //TESTES FORNECEDOR
 	public void cadastrarFornecedor(){
-		sistema.cadastraFornecedor("Fornecedor de Leite", "Rio Tinto", 88888888,"12345678");
-		assertNotNull(sistema.pesquisaFornecedorPeloNome("Fornecedor de Leite"));
+		Fornecedor f = new Fornecedor ("Fornecedor de Leite", "Rio Tinto", 88888888,"12345678");
+		sistema.cadastraFornecedor(f);
+		Fornecedor salvo = sistema.pesquisaFornecedorPassandoCnpj("12345678");
+		assertEquals (f, salvo);
 	}
+	
 	@Test                                                                                  
 	public void cadastrarMaisDeUmFornecedor(){
 		this.cadastrarFornecedor();
-		sistema.cadastraFornecedor("Fornecedor de Chocolate", "João Pessoa", 21212121,"09872");
-		assertNotNull(sistema.pesquisaFornecedorPeloNome("Fornecedor de Chocolate"));
+		Fornecedor f2 = new Fornecedor("Fornecedor de Chocolate", "João Pessoa", 21212121,"09872");
+		sistema.cadastraFornecedor(f2);
+		Fornecedor salvo2 = sistema.pesquisaFornecedorPassandoCnpj("09872");
+		assertEquals(f2, salvo2);
+
 	}
-	@Test (expected = ExcecaoSistemaDeFornecedor.class)
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void cadastraMesmoFornecedor () {
 		this.cadastrarFornecedor();
 		this.cadastrarFornecedor();
     }
-	@Test
-	public void pesquisarFornecedorPorNome(){
-		this.cadastrarFornecedor();
-		assertNotNull(sistema.pesquisaFornecedorPeloNome("Fornecedor de Leite"));
-	}
+	
 	@Test
 	public void pesquisarFornecedorPorCnpj(){
-		this.cadastrarFornecedor();
-		assertNotNull(sistema.pesquisaFornecedorPassandoCnpj("12345678"));
+		Fornecedor fornecedor = new Fornecedor ("Fornecedor de Chocolate", "João Pessoa", 21212121,"09872");
+		sistema.cadastraFornecedor(fornecedor);
+		Fornecedor salvo = sistema.pesquisaFornecedorPassandoCnpj("09872");
+		assertEquals (fornecedor, salvo);
 	}
-	@Test 
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
+	public void pesquisarFornecedorInexistentePorCnpj () {
+		sistema.pesquisaFornecedorPassandoCnpj("3333333");	
+		
+	}
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
+	public void pesquisarFornecedorInexistentePorNome () {
+		sistema.pesquisaFornecedorPeloNome("Fornecedor de Café");
+	}
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void removerFornecedor(){
 		this.cadastrarFornecedor();
 		sistema.removerFornecedorPorCnpj("12345678");
-		assertNull (sistema.pesquisaFornecedorPorCnpj("12345678"));
+		sistema.pesquisaFornecedorPorCnpj("12345678");
 	}
-	@Test (expected = ExcecaoSistemaDeFornecedor.class)
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void removerFornecedorInexistente () {
 		sistema.removerFornecedorPorCnpj("09872");
 	}	
-	@Test 
-	public void cadastrarDiferentesFornecedoresNoSistema () {
-		this.cadastrarFornecedor();
-		sistema.cadastraFornecedor("Nestle", "Sousa", 5820000, "22222");
-		assertNotNull(sistema.pesquisaFornecedorPorCnpj("22222"));
-	}
+	
 	@Test
 	public void cadastrarCliente(){                                                  // TESTES CLIENTE
-		sistema.cadastroDeCliente("Fabio","2014","Centro");
-		assertNotNull(sistema.pesquisaClientePorNome("Fabio"));
+		Cliente cliente = new Cliente ("Adriano","2014","Centro");
+		sistema.cadastroDeCliente(cliente);
+		Cliente salvo = sistema.pesquisaClientePorCpf("2014");
+		assertEquals (cliente, salvo);
 	}
+	
 	@Test
 	public void cadastrarMaisDeUmClienteCliente(){                                
 		this.cadastrarCliente();
-		sistema.cadastroDeCliente("Eduardo","242424","Projeto");
-		assertNotNull(sistema.pesquisaClientePorNome("Eduardo"));
+		Cliente cli = new Cliente("Fabia", "1234567", "Centro");
+		sistema.cadastroDeCliente(cli);
+		Cliente salvo = sistema.pesquisaClientePorCpf("1234567");
+		assertEquals (cli, salvo);
 	}
-	@Test (expected = ExcecaoSistemaDeCliente.class)
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void cadastrarMesmoCliente () {
 		this.cadastrarCliente();
 		this.cadastrarCliente();
 	}  
+	
 	@Test
 	public void pesquisarClientePorNome(){
-		this.cadastrarCliente();
-		assertNotNull(sistema.pesquisaClientePorNome("Fabio"));
+		Cliente cli = new Cliente ("Antonia", "44332211", "Centro");
+		sistema.cadastroDeCliente(cli);
+		Cliente salvo = sistema.pesquisaClientePorNome("Antonia");
+		assertEquals (cli, salvo);
 	}
+	
 	@Test
 	public void pesquisarClientePorCpf(){
-		this.cadastrarCliente();
-		assertNotNull(sistema.pesquisaClientePorCpf("2014"));
+		Cliente cli = new Cliente ("Adriana", "55555", "Centro");
+		sistema.cadastroDeCliente(cli);
+		Cliente salvo = sistema.pesquisaClientePorCpf("55555");
+		assertEquals (cli, salvo);
 	}
-	@Test (expected = ExcecaoSistemaDeCliente.class)
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void removerCliente(){
 		this.cadastrarCliente();
 		sistema.removeClientePorCpf("2014");
 		sistema.pesquisaClientePorCpf ("2014");
 	}
-	@Test (expected = ExcecaoSistemaDeCliente.class)
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void pesquisarClienteInexistentePorNome () {
 		sistema.pesquisaClientePorNome("Eduardo");
 	}
-	@Test (expected = ExcecaoSistemaDeCliente.class)
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void pesquisarClienteInexistentePorCpf () {
 		sistema.pesquisaClientePorCpf("123456789");
 	}
-	@Test (expected = ExcecaoSistemaDeCliente.class)
+	
+	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void removerClienteInexistente () {
 		sistema.removeClientePorCpf("12345");
 	}
+	
 	@Test
 	public void iniciarCaixaDiario(){                          //Testes Operações para o caixa (Guarda os valores diários e o apurado geral do mercado)
 		sistema.iniciaCaixaDiario ("16/10/2014");
 		assertNotNull (sistema.pesquisaCaixaDiario("16/10/2014"));
 	}
+	
 	@Test (expected = ExcecaoSistemaDeCaixa.class)
 	public void inserirCaixaComDataJaExistente () {
 		this.iniciarCaixaDiario();
 		this.iniciarCaixaDiario();
 	}
+	
 	@Test
 	public void consultarCaixaDiario () {
 		this.iniciarCaixaDiario();
 		assertNotNull (sistema.pesquisaCaixaDiario("16/10/2014"));
-	}
-	@Test
-	 public void pesquisarPrecoDeProdutoNoSistema () {
-	  this.cadastrarProduto();
-	     assertEquals ("Preco = 8.0", sistema.pesquisaPrecoDeProduto(1234));
-	 }																			
-	@Test																		// TESTES LISTA DE ITENS CADASTRADO	
-	public void exibirTodosOsProdutos(){
-		this.cadastrarProduto();
-		assertNotNull(sistema.exibirProdutos());
-	}
-	@Test
-	public void exibirTodosOsClientes(){
-		this.cadastrarCliente();
-		assertNotNull(sistema.exibirClientes());
-	}
-	@Test
-	public void exibirTodosOsFuncionarios(){
-		this.cadastrarFuncionarioNoSistema();
-		assertNotNull(sistema.exibirFuncionarios());
-	}
-	@Test
-	public void exibirTodosOsForrnecedores(){
-		this.cadastrarFornecedor();
-		assertNotNull(sistema.exibirFornecedores());
-	}
-	@Test
-	public void exibirTodososItemDePedido(){
-		this.criarItemDePedido();
-		assertNotNull (sistema.exibirItemDePedido());
-	}
+	}																		
+	
 	@Test
 	public void criarItemDePedido(){
 		this.cadastrarCliente();
@@ -238,31 +275,27 @@ public class SistemaDeMercadoTest {
 		sistema.cadastrarItemDePedido(p, c, 1);
 		assertNotNull (sistema.pesquisaItemDePedido("2014",1));
 	}
+	
 	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void pesquisarItemDePedidoInexistente () {
 		sistema.pedidos.pesquisaItemDePedido("1234", 12);
 	}
-	@Test
-	public void criarDoisItensDePedido () {
-		this.criarItemDePedido();
-		sistema.clientes.cadastra("Eduardo","54321","casa");
-		Cliente c = sistema.pesquisaClientePorCpf("54321");
-		sistema.produtos.cadastra("feijao",333 , 3.00);
-		Produto p = sistema.pesquisaProdutoPorCodigo(333);
-		sistema.cadastrarItemDePedido(p, c, 122);
-		assertNotNull (sistema.pesquisaItemDePedido("54321", 122));
-	}
+	
+	//@Test
+	//public void criarDoisItensDePedido () {
+		
+	//}
+	
 	@Test
 	public void pesquisarItemDePedido () {
 		this.criarItemDePedido();
 		assertNotNull (sistema.pesquisaItemDePedido("2014", 1));
 	}
+	
 	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void removerItemDePedidoPorNumeroDeItem(){
 		sistema.romorePedido(1);
 	}
-	
-	
 }
 
 

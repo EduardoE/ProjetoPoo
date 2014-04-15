@@ -11,14 +11,13 @@ public class GerenteDeFuncionario {
 		this.funcionarios = new LinkedList <Funcionario>();
 	}
 	
-	public void cadastra (String n, String cpf, String funcao) {
+	public void cadastra (Funcionario funcionario) {
 		for (Funcionario f: this.funcionarios){
-			if (f.getCpf().equals(cpf)){
+			if (f.getCpf().equals(funcionario.getCpf())){
 				throw new ExcecaoSistemaDeMercado ("Funcionario já Existe!");
 			}
 		}
-		Funcionario f  = new Funcionario (n, cpf, funcao);
-		funcionarios.add(f);
+		funcionarios.add(funcionario);
 	}
 	
 	public void removePorCPF(String cpf) {
@@ -35,30 +34,18 @@ public class GerenteDeFuncionario {
 	}
 
 	public Funcionario pesquisaPorNome(String nome) {
-		Funcionario f2 = null;
 		for (Funcionario f: this.funcionarios) {
 			if (f.getNome().equals(nome))
-				f2 = f;
+				return f;
 		}
-		return f2;
+		throw new ExcecaoSistemaDeMercado ("Funcionário Inexistente!");
 	}
 
 	public Funcionario pesquisaPorCPF(String cpf) {
-		Funcionario f2 = null;
 		for (Funcionario f: this.funcionarios) {
 			if (f.getCpf().equals(cpf))
-				f2 = f;
+				return f;
 		}
-		return f2;
-	}
-
-	public List<Funcionario> buscaFuncionarios() {
-		if(funcionarios.size() > 0){
-			return this.funcionarios;
-		}
-		else{
-			return null;
-		}
-		
+		throw new ExcecaoSistemaDeMercado ("Funcionário Inexixtente!"); 
 	}
 }
