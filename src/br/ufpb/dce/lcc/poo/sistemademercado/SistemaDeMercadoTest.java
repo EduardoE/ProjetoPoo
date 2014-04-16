@@ -267,35 +267,31 @@ public class SistemaDeMercadoTest {
 	}																		
 	
 	@Test
-	public void criarItemDePedido(){
-		this.cadastrarCliente();
-		Cliente c = sistema.pesquisaClientePorCpf("2014");
-		this.cadastrarProduto();
-		Produto p = sistema.pesquisaProdutoPorCodigo(1234);
-		sistema.cadastrarItemDePedido(p, c, 1);
-		assertNotNull (sistema.pesquisaItemDePedido("2014",1));
+	public void cadastrarItemDePedido(){
+		Produto p = new Produto ("Leite", 123, 2.00);
+		sistema.cadastraProduto(p);
+		ItemDePedido item = new ItemDePedido (p,"Alimento", 3, 1);  // numero do item de pedido = 3
+		sistema.cadastrarItemDePedido(item);
+		ItemDePedido salvo = sistema.pesquisaItemDePedido(3);
+		assertEquals (item, salvo);
 	}
 	
 	@Test (expected = ExcecaoSistemaDeMercado.class)
 	public void pesquisarItemDePedidoInexistente () {
-		sistema.pedidos.pesquisaItemDePedido("1234", 12);
+		sistema.itens.pesquisaItemDePedido(12);
 	}
-	
-	//@Test
-	//public void criarDoisItensDePedido () {
-		
-	//}
 	
 	@Test
 	public void pesquisarItemDePedido () {
-		this.criarItemDePedido();
-		assertNotNull (sistema.pesquisaItemDePedido("2014", 1));
+		this.cadastrarItemDePedido();
+		assertNotNull (sistema.pesquisaItemDePedido(3));
 	}
 	
 	@Test (expected = ExcecaoSistemaDeMercado.class)
-	public void removerItemDePedidoPorNumeroDeItem(){
-		sistema.romorePedido(1);
+	public void removerItemDePedidoPorNumeroDeItemInexixtente(){
+		sistema.removeItemPedido(1);
 	}
+	
 }
 
 

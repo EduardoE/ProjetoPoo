@@ -3,21 +3,22 @@ package br.ufpb.dce.lcc.poo.sistemademercado;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GerenteDeItemDePedido {
+public class GerenteItensDePedido {
 	private List<ItemDePedido> itensPedido;
 	
-	public GerenteDeItemDePedido(){
+	
+	public GerenteItensDePedido(){
 		this.itensPedido  = new LinkedList <ItemDePedido>();
+	
 	}
 
-	public void cadastraItem(Produto produto, Cliente cliente, int numPedido) {
-		ItemDePedido item = new ItemDePedido (produto, cliente, numPedido);
+	public void cadastraItem(ItemDePedido item) {
 		this.itensPedido.add(item);
 	}
 
-	public ItemDePedido pesquisaItemDePedido(String cpfCliente, int numItem) {
+	public ItemDePedido pesquisaItemDePedido( int numItem) {
 		for (ItemDePedido i: this.itensPedido) {
-			if ((i.getCliente().getCpf().equals(cpfCliente))&& (i.getNumeroDeItem() == numItem)) {
+			if (i.getNumeroDeItem() == numItem) {
 				return i;
 			}
 		}
@@ -33,10 +34,10 @@ public class GerenteDeItemDePedido {
 		}
 	}
 
-	public void remover(int numProduto) {
+	public void remover(int numItem) {
 		boolean remove = false;
 		for(ItemDePedido i: this.itensPedido){
-			if(i.getNumeroDeItem() ==numProduto){
+			if(i.getNumeroDeItem() == numItem){
 				this.itensPedido.remove(i);
 				remove = true;
 				break;

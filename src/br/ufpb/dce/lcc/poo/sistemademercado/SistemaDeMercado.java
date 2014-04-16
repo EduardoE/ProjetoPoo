@@ -6,7 +6,7 @@ public class SistemaDeMercado {
 	GerenteDeFornecedor fornecedores;
 	GerenteDeCliente clientes;
 	GerenteDeCaixa caixas;
-	GerenteDeItemDePedido pedidos;
+	GerenteItensDePedido itens;
 	
 	public SistemaDeMercado () {
 		funcionarios = new GerenteDeFuncionario ();
@@ -14,7 +14,7 @@ public class SistemaDeMercado {
 		fornecedores = new GerenteDeFornecedor();
 		clientes = new GerenteDeCliente();
 		caixas = new GerenteDeCaixa();
-		pedidos = new GerenteDeItemDePedido();
+		itens = new GerenteItensDePedido ();
 		
 		
 	}
@@ -107,17 +107,22 @@ public class SistemaDeMercado {
 		return this.fornecedores.pesquisaPorCnpj(cnpj);
 	}
 
-	public ItemDePedido pesquisaItemDePedido(String cpfCliente, int numeroDoItem) {
-		return this.pedidos.pesquisaItemDePedido (cpfCliente, numeroDoItem);
+	public ItemDePedido pesquisaItemDePedido(int numeroDoItem) {
+		return this.itens.pesquisaItemDePedido ( numeroDoItem);
 	}
 
-	public void cadastrarItemDePedido(Produto produto, Cliente cliente, int numPedido) {
-		pedidos.cadastraItem(produto, cliente, numPedido);
+	public void cadastrarItemDePedido(ItemDePedido i) {
+		this.itens.cadastraItem(i);
 		
 	}
 
-	public void romorePedido(int numProduto) {
-		pedidos.remover(numProduto);
+	public void removeItemPedido(int numItem) {
+		itens.remover(numItem);
+		
+	}
+
+	public void cadastraItemDePedido(ItemDePedido item) {
+		
 		
 	}
 
